@@ -1,0 +1,5 @@
+.DS_Store
+.env*
+.vercel/
+build/*.geojson
+build/map.json

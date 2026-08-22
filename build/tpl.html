@@ -1,0 +1,564 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Европа и Азия</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alice&family=Golos+Text:wght@400;500;600;700&family=PT+Sans+Narrow:wght@400;700&display=swap">
+<style>
+:root{
+  --ground:#E7ECF0; --panel:#FBFCFD; --panel-2:#F1F4F7;
+  --sea:#D6E3EC; --sea-line:#A9C2D3; --context:#DCE1E5; --context-line:#C3CBD1;
+  --ink:#141C24; --ink-2:#4C5B68; --ink-3:#798794;
+  --rule:#C6D0D8; --rule-soft:#DDE4EA;
+  --accent:#1D4E89; --accent-soft:#DCE8F5;
+  --border-country:rgba(20,28,36,.34);
+  --lbl-country:#1B242D; --lbl-halo:#FFFFFF;
+  --lbl-water:#2E6485; --lbl-relief:#6B5334; --lbl-ocean:#5F8AA6;
+  --river:#5E9AC0; --lake:#BBD6E6; --lake-line:#7FA9C4;
+  --divide:#8A3B2E;
+  --regL-eu:70%; --regL-as:63%;  --halo-drop:15%;
+  --shadow:0 1px 2px rgba(20,28,36,.06),0 8px 24px -12px rgba(20,28,36,.22);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#10161C; --panel:#161E26; --panel-2:#1C262F;
+  --sea:#101C26; --sea-line:#24404F; --context:#1E262D; --context-line:#2C363E;
+  --ink:#E6EDF3; --ink-2:#A3B1BD; --ink-3:#778693;
+  --rule:#2A353F; --rule-soft:#212B34;
+  --accent:#7FB6EE; --accent-soft:#1B2E44;
+  --border-country:rgba(232,240,246,.30);
+  --lbl-country:#EAF1F7; --lbl-halo:#0C1218;
+  --lbl-water:#7FB6D8; --lbl-relief:#C9AE84; --lbl-ocean:#4E7A93;
+  --river:#4E86AC; --lake:#1B3648; --lake-line:#3D6884;
+  --divide:#E4795F;
+  --regL-eu:44%; --regL-as:38%; --halo-drop:11%;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px -12px rgba(0,0,0,.7);
+}}
+:root[data-theme="dark"]{
+  --ground:#10161C; --panel:#161E26; --panel-2:#1C262F;
+  --sea:#101C26; --sea-line:#24404F; --context:#1E262D; --context-line:#2C363E;
+  --ink:#E6EDF3; --ink-2:#A3B1BD; --ink-3:#778693;
+  --rule:#2A353F; --rule-soft:#212B34;
+  --accent:#7FB6EE; --accent-soft:#1B2E44;
+  --border-country:rgba(232,240,246,.30);
+  --lbl-country:#EAF1F7; --lbl-halo:#0C1218;
+  --lbl-water:#7FB6D8; --lbl-relief:#C9AE84; --lbl-ocean:#4E7A93;
+  --river:#4E86AC; --lake:#1B3648; --lake-line:#3D6884;
+  --divide:#E4795F;
+  --regL-eu:44%; --regL-as:38%; --halo-drop:11%;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 24px -12px rgba(0,0,0,.7);
+}
+/* 12 регионов: тон и насыщенность фиксированы, светлота идёт от полосы континента */
+:root{
+  --h-eu-north:206; --s-eu-north:48%; --l-eu-north:var(--regL-eu);
+  --h-eu-west:166;  --s-eu-west:36%;  --l-eu-west:calc(var(--regL-eu) - 4%);
+  --h-eu-central:266; --s-eu-central:32%; --l-eu-central:calc(var(--regL-eu) + 2%);
+  --h-eu-south:36;  --s-eu-south:62%;  --l-eu-south:var(--regL-eu);
+  --h-eu-balkan:348; --s-eu-balkan:52%; --l-eu-balkan:calc(var(--regL-eu) + 2%);
+  --h-eu-east:88;   --s-eu-east:44%;   --l-eu-east:calc(var(--regL-eu) + 2%);
+  --h-as-north:202; --s-as-north:26%;  --l-as-north:calc(var(--regL-as) - 3%);
+  --h-as-central:40; --s-as-central:48%; --l-as-central:calc(var(--regL-as) + 7%);
+  --h-as-west:16;   --s-as-west:48%;   --l-as-west:calc(var(--regL-as) - 8%);
+  --h-as-south:278; --s-as-south:30%;  --l-as-south:calc(var(--regL-as) + 3%);
+  --h-as-southeast:168; --s-as-southeast:34%; --l-as-southeast:calc(var(--regL-as) - 4%);
+  --h-as-east:338;  --s-as-east:32%;   --l-as-east:calc(var(--regL-as) - 3%);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+.app{display:grid; grid-template-columns:322px 1fr; height:100dvh}
+
+/* ---------- боковая панель ---------- */
+.rail{
+  background:var(--panel); border-right:1px solid var(--rule);
+  display:flex; flex-direction:column; min-height:0; z-index:3;
+}
+.rail-head{padding:20px 22px 16px; border-bottom:1px solid var(--rule)}
+.rail-head h1{
+  font-family:Alice,"PT Serif",Georgia,serif; font-weight:400;
+  font-size:27px; line-height:1.1; margin:0 0 6px; letter-spacing:-.006em;
+}
+.rail-head p{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.45}
+.rail-body{overflow-y:auto; flex:1; min-height:0; padding-bottom:26px; overscroll-behavior:contain}
+.sect{padding:16px 22px 4px}
+.sect + .sect{border-top:1px solid var(--rule-soft)}
+.eyebrow{
+  font-family:"PT Sans Narrow",sans-serif; text-transform:uppercase;
+  letter-spacing:.13em; font-size:11.5px; font-weight:700; color:var(--ink-3);
+  margin:0 0 10px;
+}
+/* переключатели слоёв */
+.layers{display:flex; flex-direction:column; gap:1px; margin:0 -8px}
+.lay{
+  display:flex; align-items:center; gap:10px; padding:7px 8px; border-radius:3px;
+  cursor:pointer; font-size:14px; color:var(--ink); user-select:none;
+}
+.lay:hover{background:var(--panel-2)}
+.lay input{position:absolute; opacity:0; width:0; height:0}
+.box{
+  width:15px; height:15px; flex:none; border:1.5px solid var(--rule);
+  background:var(--panel); position:relative; border-radius:2px; transition:.12s;
+}
+.lay input:checked + .box{background:var(--accent); border-color:var(--accent)}
+.lay input:checked + .box::after{
+  content:""; position:absolute; left:4px; top:.5px; width:4px; height:8.5px;
+  border:solid var(--panel); border-width:0 2px 2px 0; transform:rotate(42deg);
+}
+.lay input:focus-visible + .box{outline:2px solid var(--accent); outline-offset:2px}
+.lay .cnt{margin-left:auto; font-size:11px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+.mute-row{
+  margin:12px -8px 2px; padding:10px 12px; border:1px solid var(--rule);
+  border-radius:3px; background:var(--panel-2);
+}
+.mute-row .lay{padding:0; font-weight:600}
+.mute-row .lay:hover{background:none}
+.mute-row .hint{margin:6px 0 0 25px; font-size:11.5px; color:var(--ink-2); line-height:1.4}
+
+/* легенда */
+.cont-head{
+  display:flex; align-items:baseline; gap:8px; margin:14px 0 7px;
+  font-family:"PT Sans Narrow",sans-serif; text-transform:uppercase;
+  letter-spacing:.12em; font-size:11.5px; font-weight:700; color:var(--ink-2);
+}
+.cont-head::after{content:""; flex:1; height:1px; background:var(--rule-soft)}
+.leg{display:flex; flex-direction:column; gap:1px; margin:0 -8px}
+.leg button{
+  display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+  padding:6px 8px; border:0; background:none; border-radius:3px; cursor:pointer;
+  font:inherit; font-size:13.5px; color:var(--ink); line-height:1.25;
+}
+.leg button:hover{background:var(--panel-2)}
+.leg button[aria-pressed="true"]{background:var(--accent-soft); color:var(--accent); font-weight:600}
+.leg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.sw{width:16px; height:16px; flex:none; border-radius:2px; border:1px solid rgba(0,0,0,.18)}
+.leg .n{margin-left:auto; font-size:11px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+
+/* детальная карточка региона */
+.detail{padding:16px 22px 0}
+.detail .back{
+  border:0; background:none; padding:0; margin:0 0 12px; cursor:pointer; font:inherit;
+  font-size:12.5px; color:var(--accent); display:flex; align-items:center; gap:6px;
+}
+.detail .back:hover{text-decoration:underline}
+.detail h2{
+  font-family:Alice,serif; font-weight:400; font-size:21px; line-height:1.2;
+  margin:0 0 4px; display:flex; align-items:center; gap:9px;
+}
+.detail h2 .sw{width:14px; height:14px}
+.detail .meta{margin:0 0 14px; font-size:12px; color:var(--ink-3)}
+.detail ul{list-style:none; margin:0; padding:0; columns:2; column-gap:16px; font-size:13px}
+.detail li{margin:0 0 4px; break-inside:avoid; color:var(--ink-2)}
+.note{
+  padding:14px 22px 0; font-size:12px; line-height:1.5; color:var(--ink-3);
+}
+.note b{color:var(--ink-2); font-weight:600}
+.hidden{display:none !important}
+
+/* ---------- карта ---------- */
+.stage{position:relative; overflow:hidden; background:var(--sea)}
+svg.map{
+  display:block; width:100%; height:100%; touch-action:none; cursor:grab;
+  --k:1;
+}
+svg.map.drag{cursor:grabbing}
+.ctry{stroke:none; transition:fill-opacity .12s}
+.borders path{fill:none; stroke:var(--border-country); stroke-width:.9; vector-effect:non-scaling-stroke}
+.ctx path{fill:var(--context); stroke:var(--context-line); stroke-width:.8; vector-effect:non-scaling-stroke}
+.riv path{fill:none; stroke:var(--river); stroke-width:1.1; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke}
+.lak path{fill:var(--lake); stroke:var(--lake-line); stroke-width:.8; vector-effect:non-scaling-stroke}
+.divide{
+  fill:none; stroke:var(--divide); stroke-width:2.2; vector-effect:non-scaling-stroke;
+  stroke-dasharray:9 5; stroke-linecap:round; opacity:.9;
+}
+text{
+  font-family:"PT Sans Narrow","Arial Narrow",sans-serif;
+  paint-order:stroke fill; stroke:var(--lbl-halo); stroke-width:0.22em;
+  stroke-linejoin:round; pointer-events:none; text-anchor:middle;
+}
+.t-country{fill:var(--lbl-country); font-weight:700}
+.t-ocean{fill:var(--lbl-ocean); font-style:italic; letter-spacing:.22em; font-size:calc(33px / var(--k)); stroke-width:0.16em}
+.t-sea,.t-gulf{fill:var(--lbl-water); font-style:italic}
+.t-strait{fill:var(--lbl-water); font-style:italic; font-size:calc(15px / var(--k))}
+.t-river,.t-lake{fill:var(--river); font-style:italic; font-size:calc(14px / var(--k)); stroke-width:0.2em}
+.t-mtn,.t-plain,.t-desert,.t-pen,.t-isl,.t-cape{
+  fill:var(--lbl-relief); letter-spacing:.16em; font-weight:400;
+}
+.t-cape{letter-spacing:.04em; font-style:italic}
+.s0{font-size:calc(28px / var(--k))}
+.s1{font-size:calc(20px / var(--k))}
+.s2{font-size:calc(15px / var(--k))}
+/* пороги детализации */
+svg.map:not(.z2) .mz2,svg.map:not(.z3) .mz3{display:none}
+/* изоляция региона */
+svg.map.iso .reg:not(.on) .ctry{fill-opacity:.16}
+svg.map.iso .reg:not(.on) .halo{opacity:.16}
+.reg .halo{stroke-linejoin:round; stroke-width:3.4; vector-effect:non-scaling-stroke}
+.reg .ctry:hover{fill-opacity:.78}
+/* немой режим */
+svg.map.mute text{display:none}
+
+.zoom{
+  position:absolute; right:16px; bottom:16px; display:flex; flex-direction:column;
+  background:var(--panel); border:1px solid var(--rule); border-radius:4px;
+  box-shadow:var(--shadow); overflow:hidden; z-index:2;
+}
+.zoom button{
+  width:40px; height:36px; border:0; background:none; cursor:pointer; color:var(--ink-2);
+  font:inherit; font-size:17px; line-height:1; display:grid; place-items:center;
+}
+.zoom button + button{border-top:1px solid var(--rule-soft)}
+.zoom button:hover{background:var(--panel-2); color:var(--ink)}
+.zoom button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.zoom .rst{font-size:10px; font-family:"PT Sans Narrow",sans-serif; letter-spacing:.06em; text-transform:uppercase}
+
+.tip{
+  position:absolute; pointer-events:none; z-index:4; opacity:0; transition:opacity .1s;
+  background:var(--panel); border:1px solid var(--rule); border-radius:3px;
+  box-shadow:var(--shadow); padding:6px 10px; font-size:13px; max-width:230px;
+  transform:translate(-50%,-100%); margin-top:-10px; white-space:nowrap;
+}
+.tip.on{opacity:1}
+.tip b{display:block; font-weight:600}
+.tip span{font-size:11.5px; color:var(--ink-3)}
+
+.sheet-handle{display:none}
+@media (max-width:900px){
+  body{font-size:14px}
+  .app{grid-template-columns:1fr; grid-template-rows:1fr auto}
+  .stage{order:1; min-height:0}
+  .rail{
+    order:2; border-right:0; border-top:1px solid var(--rule);
+    max-height:48dvh; box-shadow:0 -8px 24px -18px rgba(0,0,0,.5);
+  }
+  .rail.min .rail-body,.rail.min .rail-head p{display:none}
+  .rail-head{padding:12px 18px 10px; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+  .rail-head h1{font-size:20px; margin:0}
+  .rail-head p{font-size:11.5px; flex-basis:100%}
+  .sheet-handle{
+    display:block; margin-left:auto; border:1px solid var(--rule); background:var(--panel-2);
+    border-radius:3px; font:inherit; font-size:11.5px; padding:3px 10px; cursor:pointer; color:var(--ink-2);
+    font-family:"PT Sans Narrow",sans-serif; text-transform:uppercase; letter-spacing:.08em;
+  }
+  .sect,.detail,.note{padding-left:18px; padding-right:18px}
+  .detail ul{columns:2}
+  .zoom{bottom:12px; right:12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
+</style>
+
+<div class="app">
+  <aside class="rail" id="rail">
+    <div class="rail-head">
+      <h1>Европа и Азия</h1>
+      <button class="sheet-handle" id="sheet">Слои</button>
+      <p>12 регионов на одной основе. Слои включаются и выключаются — как кальки поверх контурной карты.</p>
+    </div>
+    <div class="rail-body">
+      <div class="sect">
+        <p class="eyebrow">Слои</p>
+        <div class="layers" id="layers"></div>
+        <div class="mute-row">
+          <label class="lay"><input type="checkbox" id="mute"><span class="box"></span>Немой режим</label>
+          <p class="hint">Снимает все подписи. Назови сам — потом верни подписи и проверь себя.</p>
+        </div>
+      </div>
+      <div class="sect" id="legend-sect">
+        <p class="eyebrow">Регионы</p>
+        <div id="legend"></div>
+      </div>
+      <div class="detail hidden" id="detail"></div>
+      <p class="note" id="note">
+        <b>Наведи</b> на страну — увидишь её и её регион. <b>Нажми</b> на регион — откроется состав.
+        Пунктиром показана условная граница Европы и Азии: Урал, река Урал, Каспий, Кума-Манычская
+        впадина, Керченский пролив, Босфор и Дарданеллы.
+      </p>
+    </div>
+  </aside>
+  <main class="stage" id="stage">
+    <svg class="map" id="map" role="img" aria-label="Интерактивная карта Европы и Азии, разделённая на 12 регионов"></svg>
+    <div class="tip" id="tip"></div>
+    <div class="zoom">
+      <button id="zin" title="Приблизить" aria-label="Приблизить">+</button>
+      <button id="zout" title="Отдалить" aria-label="Отдалить">−</button>
+      <button id="zrst" class="rst" title="Сбросить вид" aria-label="Сбросить вид">сброс</button>
+    </div>
+  </main>
+</div>
+
+<script id="D" type="application/json">__DATA__</script>
+<script>
+const D = JSON.parse(document.getElementById('D').textContent);
+const SVG = 'http://www.w3.org/2000/svg';
+const map = document.getElementById('map');
+
+/* страны без собственной геометрии в этом масштабе */
+const EXTRA = {
+  'eu-west':['Монако'], 'eu-central':['Лихтенштейн'],
+  'eu-south':['Сан-Марино','Ватикан','Гибралтар'],
+  'as-south':['Мальдивы'], 'as-east':['Гонконг','Макао']
+};
+const SPLITNOTE = {
+  'RUS_eu':'европейская часть','RUS_as':'азиатская часть',
+  'TUR_eu':'европейская часть (Восточная Фракия)','TUR_as':'азиатская часть (Малая Азия)',
+  'KAZ_eu':'европейская часть (западнее реки Урал)','KAZ_as':'азиатская часть'
+};
+const regName = {}, regCont = {};
+D.regions.forEach(([id,n,c]) => { regName[id]=n; regCont[id]=c; });
+
+/* ---------- отрисовка ---------- */
+const VB = {x:104, y:-32, w:1946, h:1180};
+map.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
+const root = document.createElementNS(SVG,'g');
+map.appendChild(root);
+
+function g(cls, parent){ const e=document.createElementNS(SVG,'g'); if(cls)e.setAttribute('class',cls); (parent||root).appendChild(e); return e; }
+function path(d, cls, parent){ const e=document.createElementNS(SVG,'path'); e.setAttribute('d',d); if(cls)e.setAttribute('class',cls); parent.appendChild(e); return e; }
+function txt(x,y,s,cls,parent){
+  const e=document.createElementNS(SVG,'text');
+  e.setAttribute('x',x); e.setAttribute('y',y); e.setAttribute('class',cls);
+  if(s.includes('|')){
+    s.split('|').forEach((line,i) => {
+      const ts = document.createElementNS(SVG,'tspan');
+      ts.setAttribute('x',x); ts.setAttribute('dy', i ? '1.15em' : '0');
+      ts.textContent = line; e.appendChild(ts);
+    });
+  } else e.textContent = s;
+  parent.appendChild(e); return e;
+}
+
+/* море-подложка */
+const bg = document.createElementNS(SVG,'rect');
+bg.setAttribute('x',VB.x-400); bg.setAttribute('y',VB.y-400);
+bg.setAttribute('width',VB.w+800); bg.setAttribute('height',VB.h+800);
+bg.setAttribute('fill','var(--sea)'); root.appendChild(bg);
+
+/* соседние земли вне Евразии */
+const gCtx = g('ctx'); D.context.forEach(d => path(d,null,gCtx));
+
+/* регионы: гало под заливкой даёт видимую внешнюю границу блока */
+const gRegs = g('regions');
+const byReg = {};
+D.countries.forEach(c => (byReg[c.r] = byReg[c.r] || []).push(c));
+D.regions.forEach(([id]) => {
+  const list = byReg[id] || [];
+  const grp = g('reg', gRegs); grp.dataset.reg = id;
+  const fill = `hsl(var(--h-${id}) var(--s-${id}) var(--l-${id}))`;
+  const dark = `hsl(var(--h-${id}) var(--s-${id}) calc(var(--l-${id}) - var(--halo-drop)))`;
+  const halo = path(list.map(c=>c.d).join(''), 'halo', grp);
+  halo.setAttribute('fill', dark); halo.setAttribute('stroke', dark);
+  list.forEach(c => {
+    const p = path(c.d, 'ctry', grp);
+    p.setAttribute('fill', fill);
+    p.dataset.id = c.id; p.dataset.n = c.n; p.dataset.reg = id;
+  });
+});
+
+/* границы стран, воды, линия раздела */
+const gBord = g('borders'); gBord.dataset.layer='countries';
+D.countries.forEach(c => path(c.d, null, gBord));
+const gLak = g('lak'); gLak.dataset.layer='rivers';
+D.lakes.forEach(l => path(l.d, null, gLak));
+const gRiv = g('riv'); gRiv.dataset.layer='rivers';
+D.rivers.forEach(r => path(r.d, null, gRiv));
+const gDiv = g('divide-g'); gDiv.dataset.layer='divide';
+path(D.divide, 'divide', gDiv);
+
+/* подписи */
+const KIND = {ocean:'water',sea:'water',gulf:'water',strait:'water',
+              mtn:'relief',plain:'relief',desert:'relief',pen:'relief',isl:'relief',cape:'relief'};
+const gWater = g('lbl-water'); gWater.dataset.layer='water';
+const gRelief = g('lbl-relief'); gRelief.dataset.layer='relief';
+D.labels.forEach(l => {
+  const host = KIND[l.k]==='water' ? gWater : gRelief;
+  txt(l.x, l.y, l.t, `t-${l.k} s${l.s}${l.s===2?' mz2':''}`, host);
+});
+const gHydroLbl = g('lbl-hydro'); gHydroLbl.dataset.layer='rivers';
+D.rivers.forEach(r => { if(r.n && r.a) txt(r.a[0], r.a[1], r.n, 't-river mz3', gHydroLbl); });
+D.lakes.forEach(l => { if(l.n && l.a) txt(l.a[0], l.a[1], l.n, 't-lake mz2', gHydroLbl); });
+
+const gCLbl = g('lbl-country'); gCLbl.dataset.layer='countries';
+D.countries.forEach(c => {
+  if(!c.a) return;
+  const cls = 't-country' + (c.mz>=3 ? ' mz3' : c.mz>=2 ? ' mz2' : '');
+  const t = txt(c.a[0], c.a[1], c.n, cls, gCLbl);
+  t.setAttribute('style', `font-size:calc(${c.fs}px / var(--k))`);
+});
+
+/* ---------- слои ---------- */
+const LAYERS = [
+  {id:'regions', n:'Регионы', on:true, cnt:'12'},
+  {id:'countries', n:'Страны', on:true, cnt:String(D.countries.length)},
+  {id:'water', n:'Моря и проливы', on:true, cnt:String(D.labels.filter(l=>KIND[l.k]==='water').length)},
+  {id:'rivers', n:'Реки и озёра', on:false, cnt:String(D.rivers.length + D.lakes.length)},
+  {id:'relief', n:'Горы и равнины', on:false, cnt:String(D.labels.filter(l=>KIND[l.k]==='relief').length)},
+  {id:'divide', n:'Граница Европа — Азия', on:true, cnt:''}
+];
+const layersEl = document.getElementById('layers');
+LAYERS.forEach(L => {
+  const lab = document.createElement('label'); lab.className='lay';
+  lab.innerHTML = `<input type="checkbox" ${L.on?'checked':''} data-l="${L.id}"><span class="box"></span>${L.n}<span class="cnt">${L.cnt}</span>`;
+  layersEl.appendChild(lab);
+});
+function applyLayers(){
+  LAYERS.forEach(L => {
+    const on = layersEl.querySelector(`[data-l="${L.id}"]`).checked;
+    if(L.id === 'regions'){
+      gRegs.style.display = on ? '' : 'none';
+      gCtx.style.display = on ? '' : 'none';
+    } else {
+      map.querySelectorAll(`[data-layer="${L.id}"]`).forEach(n => n.style.display = on ? '' : 'none');
+    }
+  });
+}
+layersEl.addEventListener('change', applyLayers);
+applyLayers();
+document.getElementById('mute').addEventListener('change', e => map.classList.toggle('mute', e.target.checked));
+
+/* ---------- легенда ---------- */
+const legEl = document.getElementById('legend');
+let cur = null;
+['Европа','Азия'].forEach(cont => {
+  const h = document.createElement('div'); h.className='cont-head'; h.textContent=cont; legEl.appendChild(h);
+  const box = document.createElement('div'); box.className='leg'; legEl.appendChild(box);
+  D.regions.filter(([,,c]) => c===cont).forEach(([id,n]) => {
+    const b = document.createElement('button');
+    b.type='button'; b.dataset.reg=id; b.setAttribute('aria-pressed','false');
+    const nn = (byReg[id]||[]).length + (EXTRA[id]||[]).length;
+    b.innerHTML = `<span class="sw" style="background:hsl(var(--h-${id}) var(--s-${id}) var(--l-${id}))"></span><span>${n}</span><span class="n">${nn}</span>`;
+    box.appendChild(b);
+  });
+});
+const detail = document.getElementById('detail');
+const legSect = document.getElementById('legend-sect');
+const note = document.getElementById('note');
+
+function selectRegion(id){
+  if(cur === id) id = null;
+  cur = id;
+  legEl.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.reg===id)));
+  map.classList.toggle('iso', !!id);
+  gRegs.querySelectorAll('.reg').forEach(r => r.classList.toggle('on', r.dataset.reg===id));
+  if(!id){ detail.classList.add('hidden'); legSect.classList.remove('hidden'); note.classList.remove('hidden'); return; }
+  const names = (byReg[id]||[]).filter(c => !c.id.endsWith('_eu') || c.id==='RUS_eu' ? true : true)
+    .map(c => c.split ? `${c.n} <span style="color:var(--ink-3)">— ${SPLITNOTE[c.id]}</span>` : c.n)
+    .concat(EXTRA[id]||[]);
+  detail.innerHTML =
+    `<button class="back" type="button">← все регионы</button>
+     <h2><span class="sw" style="background:hsl(var(--h-${id}) var(--s-${id}) var(--l-${id}))"></span>${regName[id]}</h2>
+     <p class="meta">${regCont[id]} · ${names.length} ${plural(names.length)}</p>
+     <ul>${names.map(n=>`<li>${n}</li>`).join('')}</ul>`;
+  detail.classList.remove('hidden'); legSect.classList.add('hidden'); note.classList.add('hidden');
+  detail.querySelector('.back').addEventListener('click', () => selectRegion(null));
+}
+function plural(n){
+  const a=n%10, b=n%100;
+  if(a===1 && b!==11) return 'страна';
+  if(a>=2 && a<=4 && (b<12||b>14)) return 'страны';
+  return 'стран';
+}
+legEl.addEventListener('click', e => {
+  const b = e.target.closest('button[data-reg]'); if(b) selectRegion(b.dataset.reg);
+});
+
+/* ---------- подсказка ---------- */
+const tip = document.getElementById('tip'), stage = document.getElementById('stage');
+map.addEventListener('pointermove', e => {
+  const t = e.target.closest('.ctry');
+  if(!t || dragging){ tip.classList.remove('on'); return; }
+  const r = stage.getBoundingClientRect();
+  tip.style.left = (e.clientX - r.left) + 'px';
+  tip.style.top = (e.clientY - r.top) + 'px';
+  const note = SPLITNOTE[t.dataset.id];
+  tip.innerHTML = `<b>${t.dataset.n}</b><span>${regName[t.dataset.reg]}${note ? ' · ' + note : ''}</span>`;
+  tip.classList.add('on');
+});
+map.addEventListener('pointerleave', () => tip.classList.remove('on'));
+map.addEventListener('click', e => {
+  const t = e.target.closest('.ctry'); if(t && !moved) selectRegion(t.dataset.reg);
+});
+
+/* ---------- панорама и масштаб ---------- */
+let k = 1, tx = 0, ty = 0, dragging = false, moved = false, sx=0, sy=0, px=0, py=0;
+function apply(){
+  root.setAttribute('transform', `translate(${tx} ${ty}) scale(${k})`);
+  map.style.setProperty('--k', k);
+  map.classList.toggle('z2', k >= minK * 1.45);
+  map.classList.toggle('z3', k >= minK * 2.9);
+}
+let minK = 1;
+function fit(){
+  const r = map.getBoundingClientRect();
+  if(!r.width || !r.height) return;
+  // содержимое занимает почти весь viewBox — приближать нечего, иначе обрежем края
+  minK = 1; k = 1;
+  tx = (VB.x + VB.w/2) * (1 - k);
+  ty = (VB.y + VB.h/2) * (1 - k);
+  apply();
+}
+function clamp(){
+  const lim = VB.w * 0.55 * k;
+  tx = Math.max(-lim, Math.min(lim + VB.w*(1-k), tx));
+  ty = Math.max(-VB.h*0.55*k, Math.min(VB.h*0.55*k + VB.h*(1-k), ty));
+}
+function zoomAt(f, cx, cy){
+  const nk = Math.max(minK, Math.min(14, k * f));
+  const r = map.getBoundingClientRect();
+  const ux = VB.x + (cx - r.left) / r.width * VB.w;
+  const uy = VB.y + (cy - r.top) / r.height * VB.h;
+  tx = ux - (ux - tx) * (nk / k);
+  ty = uy - (uy - ty) * (nk / k);
+  k = nk; clamp(); apply();
+}
+map.addEventListener('wheel', e => {
+  e.preventDefault();
+  zoomAt(Math.exp(-e.deltaY * (e.deltaMode ? 0.02 : 0.0016)), e.clientX, e.clientY);
+}, {passive:false});
+map.addEventListener('pointerdown', e => {
+  if(e.button) return;
+  dragging = true; moved = false; sx = e.clientX; sy = e.clientY; px = tx; py = ty;
+  map.classList.add('drag'); map.setPointerCapture(e.pointerId);
+});
+map.addEventListener('pointermove', e => {
+  if(!dragging) return;
+  const r = map.getBoundingClientRect(), s = VB.w / r.width;
+  const dx = (e.clientX - sx) * s, dy = (e.clientY - sy) * s;
+  if(Math.abs(e.clientX-sx) + Math.abs(e.clientY-sy) > 4) moved = true;
+  tx = px + dx; ty = py + dy; clamp(); apply();
+});
+['pointerup','pointercancel'].forEach(ev => map.addEventListener(ev, () => {
+  dragging = false; map.classList.remove('drag');
+}));
+const ctr = () => { const r = map.getBoundingClientRect(); return [r.left + r.width/2, r.top + r.height/2]; };
+document.getElementById('zin').onclick  = () => zoomAt(1.45, ...ctr());
+document.getElementById('zout').onclick = () => zoomAt(1/1.45, ...ctr());
+document.getElementById('zrst').onclick = () => { fit(); selectRegion(null); };
+/* щипок на сенсорном экране */
+let pts = new Map(), pd = 0;
+map.addEventListener('pointerdown', e => pts.set(e.pointerId, e));
+map.addEventListener('pointermove', e => {
+  if(!pts.has(e.pointerId)) return;
+  pts.set(e.pointerId, e);
+  if(pts.size !== 2) return;
+  dragging = false; map.classList.remove('drag');
+  const [a,b] = [...pts.values()];
+  const d = Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
+  if(pd) zoomAt(d/pd, (a.clientX+b.clientX)/2, (a.clientY+b.clientY)/2);
+  pd = d;
+});
+['pointerup','pointercancel'].forEach(ev => map.addEventListener(ev, e => { pts.delete(e.pointerId); if(pts.size<2) pd = 0; }));
+fit();
+addEventListener('resize', () => { if(k <= minK + .01) fit(); });
+
+/* мобильная шторка */
+const rail = document.getElementById('rail'), sheet = document.getElementById('sheet');
+sheet.addEventListener('click', () => {
+  rail.classList.toggle('min');
+  sheet.textContent = rail.classList.contains('min') ? 'Слои' : 'Свернуть';
+});
+// на узком экране панель открыта: так карте достаётся 52dvh и меньше пустого моря
+if(matchMedia('(max-width:900px)').matches) sheet.textContent = 'Свернуть';
+</script>
